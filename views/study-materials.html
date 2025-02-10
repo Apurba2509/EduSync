@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Materials</title>
+  <link rel="stylesheet" href="../public/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Study Materials</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="study-materials.html">Study Materials</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div class="card">
+      <h2>Upload Study Materials</h2>
+      <div class="file-upload">
+        <label for="file-input">📂 Choose File</label>
+        <input type="file" id="file-input">
+        
+        <div id="file-list"></div> <!-- Shows selected files -->
+    
+        <button id="upload-button" class="button">📤 Upload File</button>
+        <div id="upload-status"></div> <!-- Shows upload success/error messages -->
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2023 EduSync</p>
+  </footer>
+  <script src="../public/js/script.js"></script>
+</body>
+</html>
