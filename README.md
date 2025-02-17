@@ -151,7 +151,7 @@ This project is licensed under the **MIT License**. See the `LICENSE` file for d
 
 ## Contact
 If you have any questions or suggestions, feel free to reach out:
-- **Email**: your-email@example.com
-- **GitHub**: [your-username](https://github.com/your-username)
+- **Email**: apurbadas2509@gmail.com
+- **GitHub**: [Apurba2509](https://github.com/Apurba2509)
 
 Enjoy using **EduSync**! 🚀
