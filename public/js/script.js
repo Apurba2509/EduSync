@@ -1,13 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // 📊 Progress Chart
-  const progressChart = document.getElementById("progress-chart");
-  if (progressChart) {
-      progressChart.innerHTML = `
-          <p>Your progress: 75%</p>
-          <progress value="75" max="100"></progress>
-      `;
-  }
-  document.addEventListener("DOMContentLoaded", function () {
     // 📌 Ensure elements exist before running
     const quizContainer = document.getElementById("quiz-container");
     const attendanceBody = document.getElementById("attendance-body");
@@ -21,9 +12,56 @@ document.addEventListener("DOMContentLoaded", function () {
     if (attendanceBody) {
         renderAttendance();
     }
+
+    // 📂 File Upload Feature
+    const fileInput = document.getElementById("file-input");
+    const fileList = document.getElementById("file-list");
+    const uploadButton = document.getElementById("upload-button");
+    const uploadStatus = document.getElementById("upload-status");
+
+    if (fileInput && fileList && uploadButton && uploadStatus) {
+        fileInput.addEventListener("change", function () {
+            fileList.innerHTML = ""; // Clear previous list
+            if (fileInput.files.length === 0) {
+                fileList.innerHTML = "<p>No file selected</p>";
+                return;
+            }
+
+            for (const file of fileInput.files) {
+                const fileItem = document.createElement("p");
+                fileItem.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+                fileList.appendChild(fileItem);
+            }
+        });
+
+        uploadButton.addEventListener("click", async function () {
+            if (!fileInput.files.length) {
+                uploadStatus.innerHTML = `<p class="error">⚠️ No file selected!</p>`;
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                const response = await fetch("http://localhost:3000/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) throw new Error(result.error || "Upload failed");
+
+                uploadStatus.innerHTML = `<p class="success">${result.message}</p>`;
+            } catch (error) {
+                uploadStatus.innerHTML = `<p class="error">❌ ${error.message}</p>`;
+            }
+        });
+    }
 });
 
-// 📌 Quiz Data
+// Quiz Data
 const quizData = [
     {
         question: "What is the capital of France?",
@@ -35,12 +73,23 @@ const quizData = [
         options: ["3", "4", "5", "6"],
         answer: "4",
     },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Jupiter", "Saturn"],
+        answer: "Mars",
+    },
 ];
 
-// 📌 Render Quiz
+// Render Quiz
 function renderQuiz() {
     const quizContainer = document.getElementById("quiz-container");
-    quizContainer.innerHTML = ""; // Clear previous content
+
+    if (!quizContainer) {
+        console.error("Quiz container not found!");
+        return;
+    }
+
+    quizContainer.innerHTML = ""; // Clear previous content if any
 
     quizData.forEach((q, index) => {
         const questionDiv = document.createElement("div");
@@ -51,39 +100,31 @@ function renderQuiz() {
                 ${q.options
                     .map(
                         (option) => `
-                    <label>
-                        <input type="radio" name="question${index}" value="${option}">
-                        ${option}
-                    </label>
-                `
+                        <label>
+                            <input type="radio" name="question${index}" value="${option}">
+                            ${option}
+                        </label>
+                    `
                     )
                     .join("")}
             </div>
         `;
         quizContainer.appendChild(questionDiv);
     });
-
-    // 📌 Add Submit Button
-    const submitBtn = document.createElement("button");
-    submitBtn.textContent = "Submit Quiz";
-    submitBtn.onclick = submitQuiz;
-    quizContainer.appendChild(submitBtn);
 }
 
-// 📌 Submit Quiz
+// Submit Quiz
 function submitQuiz() {
     let score = 0;
     quizData.forEach((q, index) => {
-        const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+        const selectedOption = document.querySelector(
+            `input[name="question${index}"]:checked`
+        );
         if (selectedOption && selectedOption.value === q.answer) {
             score++;
         }
     });
-
-    // 📌 Show Result Below the Quiz Instead of `alert`
-    const resultDiv = document.createElement("p");
-    resultDiv.textContent = `Your score: ${score} / ${quizData.length}`;
-    document.getElementById("quiz-container").appendChild(resultDiv);
+    alert(`Your score is ${score}/${quizData.length}`);
 }
 
 // 📌 Attendance Data
@@ -93,9 +134,64 @@ const attendanceData = [
     { date: "2023-10-03", status: "Present" },
 ];
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Dummy Data
+    const quizzes = [
+      { name: 'Math Quiz', dueDate: '2025-02-20' },
+      { name: 'Physics Quiz', dueDate: '2025-02-22' },
+      { name: 'Chemistry Quiz', dueDate: '2025-02-25' }
+    ];
+  
+    const assignments = [
+      { name: 'Assignment 1: Algebra', dueDate: '2025-02-18' },
+      { name: 'Assignment 2: Newtons Laws', dueDate: '2025-02-20' }
+    ];
+  
+    const attendance = [
+      { date: '2025-02-10', status: 'Present' },
+      { date: '2025-02-11', status: 'Absent' },
+      { date: '2025-02-12', status: 'Present' },
+      { date: '2025-02-13', status: 'Present' },
+    ];
+  
+    // Function to populate quizzes
+    const quizList = document.getElementById('quiz-list');
+    quizzes.forEach(quiz => {
+      const li = document.createElement('li');
+      li.textContent = `${quiz.name} - Due: ${quiz.dueDate}`;
+      quizList.appendChild(li);
+    });
+  
+    // Function to populate assignments
+    const assignmentList = document.getElementById('assignment-list');
+    assignments.forEach(assignment => {
+      const li = document.createElement('li');
+      li.textContent = `${assignment.name} - Due: ${assignment.dueDate}`;
+      assignmentList.appendChild(li);
+    });
+  
+    // Function to populate attendance
+    const attendanceTable = document.getElementById('attendance-table');
+    let tableHTML = '<thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>';
+    attendance.forEach(record => {
+      tableHTML += `<tr><td>${record.date}</td><td>${record.status}</td></tr>`;
+    });
+    tableHTML += '</tbody>';
+    attendanceTable.innerHTML = tableHTML;
+  });
+  
+
+
 // 📌 Render Attendance
 function renderAttendance() {
     const attendanceBody = document.getElementById("attendance-body");
+
+    if (!attendanceBody) {
+        console.error("Attendance body not found!");
+        return;
+    }
+
     attendanceBody.innerHTML = ""; // Clear previous content
 
     attendanceData.forEach((record) => {
@@ -108,52 +204,3 @@ function renderAttendance() {
     });
 }
 
-// 📂 File Upload Featuredocument.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.getElementById("file-input");
-    const fileList = document.getElementById("file-list");
-    const uploadButton = document.getElementById("upload-button");
-    const uploadStatus = document.getElementById("upload-status");
-
-    // 📝 Show selected files before uploading
-    fileInput.addEventListener("change", function () {
-        fileList.innerHTML = ""; // Clear previous list
-        if (fileInput.files.length === 0) {
-            fileList.innerHTML = "<p>No file selected</p>";
-            return;
-        }
-
-        for (const file of fileInput.files) {
-            const fileItem = document.createElement("p");
-            fileItem.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
-            fileList.appendChild(fileItem);
-        }
-    });
-
-    // 📤 Upload File
-    uploadButton.addEventListener("click", async function () {
-        if (!fileInput.files.length) {
-            uploadStatus.innerHTML = `<p class="error">⚠️ No file selected!</p>`;
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("file", fileInput.files[0]);
-
-        try {
-            const response = await fetch("http://localhost:3000/upload", {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) throw new Error(result.error || "Upload failed");
-
-            uploadStatus.innerHTML = `<p class="success">${result.message}</p>`;
-        } catch (error) {
-            uploadStatus.innerHTML = `<p class="error">❌ ${error.message}</p>`;
-        }
-    });
-
-
-})    ;

@@ -21,15 +21,37 @@
     </nav>
   </header>
   <main>
-    <section>
+    <section id="progress-section">
       <h2>Your Progress</h2>
       <div id="progress-chart">
         <!-- Progress chart will be dynamically generated -->
       </div>
     </section>
+    
+    <!-- New Section for Dashboard Content -->
+    <section id="dashboard-content">
+      <div class="card">
+        <h3>Recent Quizzes</h3>
+        <ul id="quiz-list">
+          <!-- Quiz items will be dynamically added here -->
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Upcoming Assignments</h3>
+        <ul id="assignment-list">
+          <!-- Assignment items will be dynamically added here -->
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Your Attendance</h3>
+        <table class="attendance-table" id="attendance-table">
+          <!-- Attendance data will be dynamically added here -->
+        </table>
+      </div>
+    </section>
   </main>
   <footer>
-    <p>&copy; 2023 EduSync</p>
+    <p>&copy; 2025 EduSync</p>
   </footer>
   <script src="../public/js/script.js"></script>
 </body>
